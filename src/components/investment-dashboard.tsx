@@ -15,6 +15,8 @@ import {
   Menu,
   ArrowLeft,
   ArrowRight,
+  Coins,
+  Bitcoin,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSidebarOpen, setIsAuthenticated } from "@/redux/appSlice";
@@ -221,7 +223,7 @@ export default function InvestmentDashboard() {
                       <div className="flex justify-between items-start">
                         <div>
                           <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm">
-                            Total Investment
+                            Investment
                           </p>
                           <h3 className="text-xl md:text-3xl font-bold mt-1 bg-gradient-to-r from-cyan-600 to-purple-600 dark:from-cyan-400 dark:to-purple-500 bg-clip-text text-transparent">
                             {investmentData.total}
@@ -236,7 +238,7 @@ export default function InvestmentDashboard() {
                         <span className="text-emerald-500 font-medium">
                           +12.5%
                         </span>
-                        <span className="ml-1">from last month</span>
+                        <span className="ml-1">(All time)</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -247,7 +249,7 @@ export default function InvestmentDashboard() {
                       <div className="flex justify-between items-start">
                         <div>
                           <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm">
-                            Float Investment
+                            Income
                           </p>
                           <h3 className="text-xl md:text-3xl font-bold mt-1 bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-500 bg-clip-text text-transparent">
                             {investmentData.float}
@@ -262,7 +264,7 @@ export default function InvestmentDashboard() {
                         <span className="text-emerald-500 font-medium">
                           +8.3%
                         </span>
-                        <span className="ml-1">from last month</span>
+                        <span className="ml-1">(All time)</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -273,7 +275,7 @@ export default function InvestmentDashboard() {
                       <div className="flex justify-between items-start">
                         <div>
                           <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm">
-                            Investment Profit
+                            Profit
                           </p>
                           <h3 className="text-xl md:text-3xl font-bold mt-1 bg-gradient-to-r from-emerald-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-500 bg-clip-text text-transparent">
                             {investmentData.profit}
@@ -288,8 +290,104 @@ export default function InvestmentDashboard() {
                         <span className="text-emerald-500 font-medium">
                           +{investmentData.profitPercentage}%
                         </span>
-                        <span className="ml-1">return rate</span>
+                        <span className="ml-1">(All time)</span>
                       </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 overflow-hidden group hover:border-cyan-500/50 transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm">
+                           Investment
+                          </p>
+                          <h3 className="text-xl md:text-3xl font-bold mt-1 bg-gradient-to-r from-cyan-600 to-purple-600 dark:from-cyan-400 dark:to-purple-500 bg-clip-text text-transparent">
+                            {investmentData.total}
+                          </h3>
+                        </div>
+                        <div className="p-2 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
+                          <DollarSign size={20} />
+                        </div>
+                      </div>
+                      <div className="mt-2 md:mt-4 flex items-center text-xs text-slate-500 dark:text-slate-400">
+                        <TrendingUp className="mr-1 h-3 w-3 text-emerald-500" />
+                        <span className="text-emerald-500 font-medium">
+                          +12.5%
+                        </span>
+                        <span className="ml-1">(Last month)</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 overflow-hidden group hover:border-purple-500/50 transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm">
+                            Income
+                          </p>
+                          <h3 className="text-xl md:text-3xl font-bold mt-1 bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-500 bg-clip-text text-transparent">
+                            {investmentData.float}
+                          </h3>
+                        </div>
+                        <div className="p-2 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                          <Wallet size={20} />
+                        </div>
+                      </div>
+                      <div className="mt-2 md:mt-4 flex items-center text-xs text-slate-500 dark:text-slate-400">
+                        <TrendingUp className="mr-1 h-3 w-3 text-emerald-500" />
+                        <span className="text-emerald-500 font-medium">
+                          +8.3%
+                        </span>
+                        <span className="ml-1">(Last month)</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 overflow-hidden group hover:border-emerald-500/50 transition-all duration-300 sm:col-span-2 lg:col-span-1">
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm">
+                            Profit
+                          </p>
+                          <h3 className="text-xl md:text-3xl font-bold mt-1 bg-gradient-to-r from-emerald-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-500 bg-clip-text text-transparent">
+                            {investmentData.profit}
+                          </h3>
+                        </div>
+                        <div className="p-2 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                          <TrendingUp size={20} />
+                        </div>
+                      </div>
+                      <div className="mt-2 md:mt-4 flex items-center text-xs text-slate-500 dark:text-slate-400">
+                        <TrendingUp className="mr-1 h-3 w-3 text-emerald-500" />
+                        <span className="text-emerald-500 font-medium">
+                          +{investmentData.profitPercentage}%
+                        </span>
+                        <span className="ml-1">(Last month)</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 overflow-hidden group hover:border-emerald-500/50 transition-all duration-300 sm:col-span-2 lg:col-span-1">
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm">
+                            Available Investment
+                          </p>
+                          <h3 className="text-xl md:text-3xl font-bold mt-1 bg-gradient-to-r from-emerald-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-500 bg-clip-text text-transparent">
+                            {investmentData.profit}
+                          </h3>
+                        </div>
+                        <div className="p-2 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                        <Coins size={20} />
+                        </div>
+                      </div>
+                      
                     </CardContent>
                   </Card>
                 </div>
@@ -308,25 +406,27 @@ export default function InvestmentDashboard() {
                             value="all"
                             className="data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white text-xs md:text-sm"
                           >
-                            All Installments
+                            Upcoming (Due in 10 days)
                           </TabsTrigger>
                           <TabsTrigger
-                            value="paid"
-                            className="data-[state=active]:bg-emerald-50 dark:data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-600 dark:data-[state=active]:text-emerald-400 text-xs md:text-sm"
+                            value="due"
+                            className="data-[state=active]:bg-amber-50 dark:data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-600 dark:data-[state=active]:text-amber-400 text-xs md:text-sm"
+
                           >
-                            Paid Installments
+                            Due (Decided Date passed)
                           </TabsTrigger>
                           <TabsTrigger
                             value="late"
                             className="data-[state=active]:bg-rose-50 dark:data-[state=active]:bg-rose-500/20 data-[state=active]:text-rose-600 dark:data-[state=active]:text-rose-400 text-xs md:text-sm"
                           >
-                            Late Installments
+                            Late (Due date passed 10 days)
                           </TabsTrigger>
                           <TabsTrigger
-                            value="due"
-                            className="data-[state=active]:bg-amber-50 dark:data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-600 dark:data-[state=active]:text-amber-400 text-xs md:text-sm"
+                            value="paid"
+                            className="data-[state=active]:bg-emerald-50 dark:data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-600 dark:data-[state=active]:text-emerald-400 text-xs md:text-sm"
+
                           >
-                            Due Installments
+                            Paid
                           </TabsTrigger>
                         </TabsList>
                       </div>
