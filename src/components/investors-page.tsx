@@ -21,7 +21,8 @@ import Sidebaar from "./Sidebaar";
 // import { investorsData } from "./api/installments";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsMobile, setSidebarOpen } from "@/redux/appSlice";
-import { set } from "zod";
+import Skeleton from "@/components/ui/skeleton";
+
 
 // Update the InvestorsPage component to include pagination and investor detail view
 export default function InvestorsPage() {
@@ -121,24 +122,6 @@ export default function InvestorsPage() {
     }
   }, [selectedInvestorId]);
   
-
-  if (!investorsData) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-slate-500 dark:text-slate-400">Loading...</p>
-      </div>
-    );
-  }
-  if (investorsData && investorsData.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-slate-500 dark:text-slate-400">
-          No investors found.
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <div className="flex h-screen overflow-hidden">
@@ -230,7 +213,36 @@ export default function InvestorsPage() {
             </div>
           </header>
 
+{investorsData && investorsData.length === 0 && (
+          <div className="flex items-center justify-center flex-1">
+            <p className="text-slate-500 dark:text-slate-400">
+              No investors found.
+            </p>
+          </div>
+        )}
           {/* Investors Page Content */}
+          {!investorsData ? (
+            <>
+            <div className="p-5">
+            <Skeleton className="w-full h-[80px] rounded-full" />
+            </div>
+            <div className="p-5">
+            <Skeleton className="w-full h-[80px] rounded-full" />
+            </div>
+            <div className="p-5">
+            <Skeleton className="w-full h-[80px] rounded-full" />
+            </div>
+            <div className="p-5">
+            <Skeleton className="w-full h-[80px] rounded-full" />
+            </div>
+            <div className="p-5">
+            <Skeleton className="w-full h-[80px] rounded-full" />
+            </div>
+            <div className="p-5">
+            <Skeleton className="w-full h-[80px] rounded-full" />
+            </div>
+            </>
+          ) : (
           <main className="flex-1 overflow-auto p-4 md:p-6">
               {selectedInvestorId ? (
                 <InvestorDetail
@@ -423,6 +435,7 @@ export default function InvestorsPage() {
                 </div>
               )}
           </main>
+          )}
         </div>
       </div>
     </div>
