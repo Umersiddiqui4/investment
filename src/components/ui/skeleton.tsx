@@ -1,4 +1,15 @@
-declare module "@/components/ui/skeleton" {
-    const Skeleton: React.FC<React.HTMLAttributes<HTMLDivElement>>;
-    export default Skeleton;
-  }
+import { cn } from "@/lib/utils"
+import React from "react"
+
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+const Skeleton: React.FC<SkeletonProps> = ({ className, ...props }) => {
+  return (
+    <div
+      className={cn("animate-pulse rounded-md bg-primary/10", className)}
+      {...props}
+    />
+  )
+}
+
+export default Skeleton

@@ -21,7 +21,7 @@ import Sidebaar from "./Sidebaar";
 // import { investorsData } from "./api/installments";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsMobile, setSidebarOpen } from "@/redux/appSlice";
-import Skeleton from "@/components/ui/skeleton";
+import Skeleton from "./ui/skeleton";
 
 
 // Update the InvestorsPage component to include pagination and investor detail view
