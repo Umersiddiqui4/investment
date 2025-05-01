@@ -101,16 +101,16 @@ export function AuthForms() {
           onValueChange={setActiveTab}
           className="w-full max-w-md mx-auto"
         >
-          <TabsList className="grid w-full grid-cols-2">
+          {/* <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signin">Sign In</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
-          </TabsList>
+          </TabsList> */}
           <TabsContent value="signin">
             <SignInForm onSuccess={() => setActiveTab("signup")} />
           </TabsContent>
-          <TabsContent value="signup">
+          {/* <TabsContent value="signup">
             <SignUpForm onSuccess={() => setActiveTab("signin")} />
-          </TabsContent>
+          </TabsContent> */}
         </Tabs>
       </div>
     </div>
@@ -248,383 +248,383 @@ function SignInForm({ onSuccess }: { onSuccess: () => void }) {
   );
 }
 
-function SignUpForm({ onSuccess }: { onSuccess: () => void }) {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [cnicFrontImage, setCnicFrontImage] = useState<string | null>(null);
-  const [cnicBackImage, setCnicBackImage] = useState<string | null>(null);
-  const { toast } = useToast();
+// function SignUpForm({ onSuccess }: { onSuccess: () => void }) {
+//   const [showPassword, setShowPassword] = useState(false);
+//   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+//   const [profileImage, setProfileImage] = useState<string | null>(null);
+//   const [cnicFrontImage, setCnicFrontImage] = useState<string | null>(null);
+//   const [cnicBackImage, setCnicBackImage] = useState<string | null>(null);
+//   const { toast } = useToast();
 
-  const form = useForm({
-    resolver: zodResolver(signUpFormSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      contact: "",
-      cnicNumber: "",
-      password: "",
-      confirmPassword: "",
-    },
-  });
-  function onSubmit(data: any) {
-    // Validate that all required images are uploaded
-    if (!profileImage || !cnicFrontImage || !cnicBackImage) {
-      toast({
-        title: "Missing images",
-        description: "Please upload all required images",
-        variant: "destructive",
-      });
-      return;
-    }
+//   const form = useForm({
+//     resolver: zodResolver(signUpFormSchema),
+//     defaultValues: {
+//       username: "",
+//       email: "",
+//       contact: "",
+//       cnicNumber: "",
+//       password: "",
+//       confirmPassword: "",
+//     },
+//   });
+//   function onSubmit(data: any) {
+//     // Validate that all required images are uploaded
+//     if (!profileImage || !cnicFrontImage || !cnicBackImage) {
+//       toast({
+//         title: "Missing images",
+//         description: "Please upload all required images",
+//         variant: "destructive",
+//       });
+//       return;
+//     }
 
-    // In a real app, you would handle registration here
-    console.log({ ...data, profileImage, cnicFrontImage, cnicBackImage });
-    toast({
-      title: "Account created",
-      description: "Your account has been created successfully.",
-    });
-    onSuccess();
-  }
+//     // In a real app, you would handle registration here
+//     console.log({ ...data, profileImage, cnicFrontImage, cnicBackImage });
+//     toast({
+//       title: "Account created",
+//       description: "Your account has been created successfully.",
+//     });
+//     onSuccess();
+//   }
 
-  const handleImageUpload = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    setImage: React.Dispatch<React.SetStateAction<string | null>>
-  ) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (typeof event.target?.result === "string") {
-          setImage(event.target.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+//   const handleImageUpload = (
+//     e: React.ChangeEvent<HTMLInputElement>,
+//     setImage: React.Dispatch<React.SetStateAction<string | null>>
+//   ) => {
+//     const file = e.target.files?.[0];
+//     if (file) {
+//       const reader = new FileReader();
+//       reader.onload = (event) => {
+//         if (typeof event.target?.result === "string") {
+//           setImage(event.target.result);
+//         }
+//       };
+//       reader.readAsDataURL(file);
+//     }
+//   };
 
-  return (
-    <Card className="mb-6">
-      <CardHeader className="p-4 sm:p-6">
-        <CardTitle className="text-xl sm:text-2xl">Create an Account</CardTitle>
-        <CardDescription>
-          Enter your details to create a new account
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="px-4 sm:px-6">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Profile Image Upload */}
-            <div className="mb-6 flex flex-col items-center">
-              <Label className="self-start mb-2">Profile Picture</Label>
-              <div className="flex flex-col items-center">
-                <div
-                  className={cn(
-                    "w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-dashed flex items-center justify-center mb-2 overflow-hidden",
-                    profileImage ? "border-primary" : "border-muted-foreground"
-                  )}
-                >
-                  {profileImage ? (
-                    <img
-                      src={profileImage || "/placeholder.svg"}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <Camera className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
-                  )}
-                </div>
-                <Label
-                  htmlFor="profile-image"
-                  className="cursor-pointer inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-primary text-primary-foreground rounded-md text-xs sm:text-sm font-medium"
-                >
-                  <Upload className="mr-1.5 h-3.5 w-3.5 sm:mr-2 sm:h-4 sm:w-4" />
-                  Upload Photo
-                </Label>
-                <Input
-                  id="profile-image"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleImageUpload(e, setProfileImage)}
-                />
-              </div>
-            </div>
+//   return (
+//     <Card className="mb-6">
+//       <CardHeader className="p-4 sm:p-6">
+//         <CardTitle className="text-xl sm:text-2xl">Create an Account</CardTitle>
+//         <CardDescription>
+//           Enter your details to create a new account
+//         </CardDescription>
+//       </CardHeader>
+//       <CardContent className="px-4 sm:px-6">
+//         <Form {...form}>
+//           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+//             {/* Profile Image Upload */}
+//             <div className="mb-6 flex flex-col items-center">
+//               <Label className="self-start mb-2">Profile Picture</Label>
+//               <div className="flex flex-col items-center">
+//                 <div
+//                   className={cn(
+//                     "w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-dashed flex items-center justify-center mb-2 overflow-hidden",
+//                     profileImage ? "border-primary" : "border-muted-foreground"
+//                   )}
+//                 >
+//                   {profileImage ? (
+//                     <img
+//                       src={profileImage || "/placeholder.svg"}
+//                       alt="Profile"
+//                       className="w-full h-full object-cover"
+//                     />
+//                   ) : (
+//                     <Camera className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
+//                   )}
+//                 </div>
+//                 <Label
+//                   htmlFor="profile-image"
+//                   className="cursor-pointer inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-primary text-primary-foreground rounded-md text-xs sm:text-sm font-medium"
+//                 >
+//                   <Upload className="mr-1.5 h-3.5 w-3.5 sm:mr-2 sm:h-4 sm:w-4" />
+//                   Upload Photo
+//                 </Label>
+//                 <Input
+//                   id="profile-image"
+//                   type="file"
+//                   accept="image/*"
+//                   className="hidden"
+//                   onChange={(e) => handleImageUpload(e, setProfileImage)}
+//                 />
+//               </div>
+//             </div>
 
-            {/* Basic Information */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <User className="absolute left-3 top-2.5 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                        <Input
-                          placeholder="johndoe"
-                          className="pl-9 sm:pl-10 text-sm sm:text-base"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-2.5 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                        <Input
-                          placeholder="email@example.com"
-                          className="pl-9 sm:pl-10 text-sm sm:text-base"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+//             {/* Basic Information */}
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <FormField
+//                 control={form.control}
+//                 name="username"
+//                 render={({ field }) => (
+//                   <FormItem>
+//                     <FormLabel>Username</FormLabel>
+//                     <FormControl>
+//                       <div className="relative">
+//                         <User className="absolute left-3 top-2.5 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+//                         <Input
+//                           placeholder="johndoe"
+//                           className="pl-9 sm:pl-10 text-sm sm:text-base"
+//                           {...field}
+//                         />
+//                       </div>
+//                     </FormControl>
+//                     <FormMessage />
+//                   </FormItem>
+//                 )}
+//               />
+//               <FormField
+//                 control={form.control}
+//                 name="email"
+//                 render={({ field }) => (
+//                   <FormItem>
+//                     <FormLabel>Email</FormLabel>
+//                     <FormControl>
+//                       <div className="relative">
+//                         <Mail className="absolute left-3 top-2.5 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+//                         <Input
+//                           placeholder="email@example.com"
+//                           className="pl-9 sm:pl-10 text-sm sm:text-base"
+//                           {...field}
+//                         />
+//                       </div>
+//                     </FormControl>
+//                     <FormMessage />
+//                   </FormItem>
+//                 )}
+//               />
+//             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="contact"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Contact Number</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-2.5 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                        <Input
-                          placeholder="+1234567890"
-                          className="pl-9 sm:pl-10 text-sm sm:text-base"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="cnicNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>CNIC Number</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <CreditCard className="absolute left-3 top-2.5 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                        <Input
-                          placeholder="3520112345678"
-                          className="pl-9 sm:pl-10 text-sm sm:text-base"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <FormField
+//                 control={form.control}
+//                 name="contact"
+//                 render={({ field }) => (
+//                   <FormItem>
+//                     <FormLabel>Contact Number</FormLabel>
+//                     <FormControl>
+//                       <div className="relative">
+//                         <Phone className="absolute left-3 top-2.5 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+//                         <Input
+//                           placeholder="+1234567890"
+//                           className="pl-9 sm:pl-10 text-sm sm:text-base"
+//                           {...field}
+//                         />
+//                       </div>
+//                     </FormControl>
+//                     <FormMessage />
+//                   </FormItem>
+//                 )}
+//               />
+//               <FormField
+//                 control={form.control}
+//                 name="cnicNumber"
+//                 render={({ field }) => (
+//                   <FormItem>
+//                     <FormLabel>CNIC Number</FormLabel>
+//                     <FormControl>
+//                       <div className="relative">
+//                         <CreditCard className="absolute left-3 top-2.5 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+//                         <Input
+//                           placeholder="3520112345678"
+//                           className="pl-9 sm:pl-10 text-sm sm:text-base"
+//                           {...field}
+//                         />
+//                       </div>
+//                     </FormControl>
+//                     <FormMessage />
+//                   </FormItem>
+//                 )}
+//               />
+//             </div>
 
-            {/* CNIC Images */}
-            <div className="grid grid-cols-1 gap-4 mt-4">
-              <Label className="block mb-1">CNIC Images</Label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <div
-                    className={cn(
-                      "h-32 sm:h-40 border-2 border-dashed rounded-md flex flex-col items-center justify-center mb-2",
-                      cnicFrontImage
-                        ? "border-primary"
-                        : "border-muted-foreground"
-                    )}
-                  >
-                    {cnicFrontImage ? (
-                      <img
-                        src={cnicFrontImage || "/placeholder.svg"}
-                        alt="CNIC Front"
-                        className="w-full h-full object-contain p-2"
-                      />
-                    ) : (
-                      <>
-                        <Upload className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground mb-1 sm:mb-2" />
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                          Upload CNIC front
-                        </p>
-                      </>
-                    )}
-                  </div>
-                  <Label
-                    htmlFor="cnic-front"
-                    className="cursor-pointer inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-primary text-primary-foreground rounded-md text-xs sm:text-sm font-medium"
-                  >
-                    <Upload className="mr-1.5 h-3.5 w-3.5 sm:mr-2 sm:h-4 sm:w-4" />
-                    Upload Front
-                  </Label>
-                  <Input
-                    id="cnic-front"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleImageUpload(e, setCnicFrontImage)}
-                  />
-                </div>
-                <div>
-                  <div
-                    className={cn(
-                      "h-32 sm:h-40 border-2 border-dashed rounded-md flex flex-col items-center justify-center mb-2",
-                      cnicBackImage
-                        ? "border-primary"
-                        : "border-muted-foreground"
-                    )}
-                  >
-                    {cnicBackImage ? (
-                      <img
-                        src={cnicBackImage || "/placeholder.svg"}
-                        alt="CNIC Back"
-                        className="w-full h-full object-contain p-2"
-                      />
-                    ) : (
-                      <>
-                        <Upload className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground mb-1 sm:mb-2" />
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                          Upload CNIC back
-                        </p>
-                      </>
-                    )}
-                  </div>
-                  <Label
-                    htmlFor="cnic-back"
-                    className="cursor-pointer inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-primary text-primary-foreground rounded-md text-xs sm:text-sm font-medium"
-                  >
-                    <Upload className="mr-1.5 h-3.5 w-3.5 sm:mr-2 sm:h-4 sm:w-4" />
-                    Upload Back
-                  </Label>
-                  <Input
-                    id="cnic-back"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleImageUpload(e, setCnicBackImage)}
-                  />
-                </div>
-              </div>
-            </div>
+//             {/* CNIC Images */}
+//             <div className="grid grid-cols-1 gap-4 mt-4">
+//               <Label className="block mb-1">CNIC Images</Label>
+//               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//                 <div>
+//                   <div
+//                     className={cn(
+//                       "h-32 sm:h-40 border-2 border-dashed rounded-md flex flex-col items-center justify-center mb-2",
+//                       cnicFrontImage
+//                         ? "border-primary"
+//                         : "border-muted-foreground"
+//                     )}
+//                   >
+//                     {cnicFrontImage ? (
+//                       <img
+//                         src={cnicFrontImage || "/placeholder.svg"}
+//                         alt="CNIC Front"
+//                         className="w-full h-full object-contain p-2"
+//                       />
+//                     ) : (
+//                       <>
+//                         <Upload className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground mb-1 sm:mb-2" />
+//                         <p className="text-xs sm:text-sm text-muted-foreground">
+//                           Upload CNIC front
+//                         </p>
+//                       </>
+//                     )}
+//                   </div>
+//                   <Label
+//                     htmlFor="cnic-front"
+//                     className="cursor-pointer inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-primary text-primary-foreground rounded-md text-xs sm:text-sm font-medium"
+//                   >
+//                     <Upload className="mr-1.5 h-3.5 w-3.5 sm:mr-2 sm:h-4 sm:w-4" />
+//                     Upload Front
+//                   </Label>
+//                   <Input
+//                     id="cnic-front"
+//                     type="file"
+//                     accept="image/*"
+//                     className="hidden"
+//                     onChange={(e) => handleImageUpload(e, setCnicFrontImage)}
+//                   />
+//                 </div>
+//                 <div>
+//                   <div
+//                     className={cn(
+//                       "h-32 sm:h-40 border-2 border-dashed rounded-md flex flex-col items-center justify-center mb-2",
+//                       cnicBackImage
+//                         ? "border-primary"
+//                         : "border-muted-foreground"
+//                     )}
+//                   >
+//                     {cnicBackImage ? (
+//                       <img
+//                         src={cnicBackImage || "/placeholder.svg"}
+//                         alt="CNIC Back"
+//                         className="w-full h-full object-contain p-2"
+//                       />
+//                     ) : (
+//                       <>
+//                         <Upload className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground mb-1 sm:mb-2" />
+//                         <p className="text-xs sm:text-sm text-muted-foreground">
+//                           Upload CNIC back
+//                         </p>
+//                       </>
+//                     )}
+//                   </div>
+//                   <Label
+//                     htmlFor="cnic-back"
+//                     className="cursor-pointer inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-primary text-primary-foreground rounded-md text-xs sm:text-sm font-medium"
+//                   >
+//                     <Upload className="mr-1.5 h-3.5 w-3.5 sm:mr-2 sm:h-4 sm:w-4" />
+//                     Upload Back
+//                   </Label>
+//                   <Input
+//                     id="cnic-back"
+//                     type="file"
+//                     accept="image/*"
+//                     className="hidden"
+//                     onChange={(e) => handleImageUpload(e, setCnicBackImage)}
+//                   />
+//                 </div>
+//               </div>
+//             </div>
 
-            {/* Password Fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          type={showPassword ? "text" : "password"}
-                          placeholder="••••••••"
-                          className="pr-10 text-sm sm:text-base"
-                          {...field}
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <EyeOff size={16} />
-                          ) : (
-                            <Eye size={16} />
-                          )}
-                          <span className="sr-only">
-                            {showPassword ? "Hide password" : "Show password"}
-                          </span>
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          type={showConfirmPassword ? "text" : "password"}
-                          placeholder="••••••••"
-                          className="pr-10 text-sm sm:text-base"
-                          {...field}
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
-                          onClick={() =>
-                            setShowConfirmPassword(!showConfirmPassword)
-                          }
-                        >
-                          {showConfirmPassword ? (
-                            <EyeOff size={16} />
-                          ) : (
-                            <Eye size={16} />
-                          )}
-                          <span className="sr-only">
-                            {showConfirmPassword
-                              ? "Hide password"
-                              : "Show password"}
-                          </span>
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+//             {/* Password Fields */}
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+//               <FormField
+//                 control={form.control}
+//                 name="password"
+//                 render={({ field }) => (
+//                   <FormItem>
+//                     <FormLabel>Password</FormLabel>
+//                     <FormControl>
+//                       <div className="relative">
+//                         <Input
+//                           type={showPassword ? "text" : "password"}
+//                           placeholder="••••••••"
+//                           className="pr-10 text-sm sm:text-base"
+//                           {...field}
+//                         />
+//                         <Button
+//                           type="button"
+//                           variant="ghost"
+//                           size="icon"
+//                           className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
+//                           onClick={() => setShowPassword(!showPassword)}
+//                         >
+//                           {showPassword ? (
+//                             <EyeOff size={16} />
+//                           ) : (
+//                             <Eye size={16} />
+//                           )}
+//                           <span className="sr-only">
+//                             {showPassword ? "Hide password" : "Show password"}
+//                           </span>
+//                         </Button>
+//                       </div>
+//                     </FormControl>
+//                     <FormMessage />
+//                   </FormItem>
+//                 )}
+//               />
+//               <FormField
+//                 control={form.control}
+//                 name="confirmPassword"
+//                 render={({ field }) => (
+//                   <FormItem>
+//                     <FormLabel>Confirm Password</FormLabel>
+//                     <FormControl>
+//                       <div className="relative">
+//                         <Input
+//                           type={showConfirmPassword ? "text" : "password"}
+//                           placeholder="••••••••"
+//                           className="pr-10 text-sm sm:text-base"
+//                           {...field}
+//                         />
+//                         <Button
+//                           type="button"
+//                           variant="ghost"
+//                           size="icon"
+//                           className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
+//                           onClick={() =>
+//                             setShowConfirmPassword(!showConfirmPassword)
+//                           }
+//                         >
+//                           {showConfirmPassword ? (
+//                             <EyeOff size={16} />
+//                           ) : (
+//                             <Eye size={16} />
+//                           )}
+//                           <span className="sr-only">
+//                             {showConfirmPassword
+//                               ? "Hide password"
+//                               : "Show password"}
+//                           </span>
+//                         </Button>
+//                       </div>
+//                     </FormControl>
+//                     <FormMessage />
+//                   </FormItem>
+//                 )}
+//               />
+//             </div>
 
-            <Button type="submit" className="w-full mt-6">
-              Create Account
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-      <CardFooter className="flex justify-center p-4 sm:p-6">
-        <p className="text-xs sm:text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <Button
-            variant="link"
-            className="p-0 h-auto text-xs sm:text-sm"
-            onClick={() =>
-              (
-                document.querySelector('[data-value="signin"]') as HTMLElement
-              )?.click()
-            }
-          >
-            Sign in
-          </Button>
-        </p>
-      </CardFooter>
-    </Card>
-  );
-}
+//             <Button type="submit" className="w-full mt-6">
+//               Create Account
+//             </Button>
+//           </form>
+//         </Form>
+//       </CardContent>
+//       <CardFooter className="flex justify-center p-4 sm:p-6">
+//         <p className="text-xs sm:text-sm text-muted-foreground">
+//           Already have an account?{" "}
+//           <Button
+//             variant="link"
+//             className="p-0 h-auto text-xs sm:text-sm"
+//             onClick={() =>
+//               (
+//                 document.querySelector('[data-value="signin"]') as HTMLElement
+//               )?.click()
+//             }
+//           >
+//             Sign in
+//           </Button>
+//         </p>
+//       </CardFooter>
+//     </Card>
+//   );
+// }
