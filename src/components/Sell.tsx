@@ -159,7 +159,7 @@ export default function Sell() {
                 </Button>
               )}
               <h1 className="text-lg font-semibold hidden md:block">
-                Investment Sales
+                Sales
               </h1>
             </div>
             <div className="flex items-center gap-2 md:gap-4">
@@ -201,7 +201,7 @@ export default function Sell() {
               <div className="max-w-7xl mx-auto space-y-6">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-                    Investment Sales
+                  Sales
                   </h2>
                   <div className="flex items-center gap-3 w-full md:w-auto">
                     <div className="relative flex-1 md:w-64">
@@ -238,7 +238,7 @@ export default function Sell() {
                       >
                         <List size={16} />
                       </Button>
-                      <Button
+                      {/* <Button
                         onClick={() => dispatch(setIsShowCreateInstallment(true))}
                         
                         className="bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700"
@@ -246,7 +246,7 @@ export default function Sell() {
                         <Plus size={16} />
 
                         {!isMobile && "Create Sale"}
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 </div>
@@ -267,7 +267,7 @@ export default function Sell() {
                       value="my"
                       className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white data-[state=active]:shadow-[inset_0_0_12px_rgba(59,130,246,0.2)]"
                     >
-                      My Sell
+                      Create Sales
                     </TabsTrigger>
                   </TabsList>
 
@@ -308,13 +308,14 @@ export default function Sell() {
                   </TabsContent>
 
                   <TabsContent value="my" className="mt-0 space-y-4">
-                    {filteredMyItems.length === 0 ? (
+                    {/* {filteredMyItems.length === 0 ? (
                       <div className="text-center py-12 text-slate-400">
                         No sales found matching your search
                       </div>
-                    ) : (
+                    ) : ( */}
                       <>
-                        {viewMode === "grid" ? (
+                      <CreateInstallmentForm />
+                        {/* {viewMode === "grid" ? (
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {installments.length > 0  && installments.map((item: any) => (
                               <SellItemCard
@@ -337,10 +338,10 @@ export default function Sell() {
                                 formatCurrency={formatCurrency}
                               />
                             ))}
-                          </div>
-                        )}
+                          </div> */}
+                        {/* )} */}
                       </>
-                    )}
+                    {/* )} */}
                   </TabsContent>
                 </Tabs>
               </div>
