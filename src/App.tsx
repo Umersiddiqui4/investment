@@ -1,10 +1,8 @@
-import { useState } from "react";
 import "./index.css";
 import InvestmentDashboard from "./components/investment-dashboard";
-import InvestorsPage from "./components/investors-page";
 import { ThemeProvider } from "./components/theme/theme-provider";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { RegistrationForm } from "./components/add-customer";
+
 import Profile from "./components/Profile";
 import Installments from "./components/Installments";
 import Settings from "./components/Settings";
@@ -13,6 +11,7 @@ import { AuthForms } from "./components/auth/auth-forms";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useSelector } from "react-redux";
+import {Users} from "./components/users";
 
 // Mock auth logic for now
 
@@ -37,19 +36,19 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/investors"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <InvestorsPage />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
-            path="/add-customer"
+            path="/users"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <RegistrationForm/>
+                <Users/>
               </ProtectedRoute>
             }
           />
@@ -78,7 +77,7 @@ export default function App() {
             }
           />
           <Route
-            path="/sell"
+            path="/sells"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <Sell />

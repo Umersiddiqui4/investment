@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { v4 as uuidv4 } from "uuid";
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -22,6 +22,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PlusCircle } from "lucide-react"
 import UserList, { User } from "./ui/user-list";
 import AddGuarantorForm from "./ui/add-guarantor-form";
+import useUsers from "@/hooks/getApi";
+import axios from "axios";
+import Skeleton from "./ui/skeleton";
 
 // Create a dynamic schema based on user type
 const createFormSchema = (userType: string) => {
@@ -59,51 +62,51 @@ const createFormSchema = (userType: string) => {
   }
 }
 
-const customers: User[] = [
-  {
-    id: "1",
-    name: "Alex Johnson",
-    profileImage: "/placeholder.svg?height=100&width=100",
-    activeSince: "Jan 2023",
-    type: "Customer",
-  },
-  {
-    id: "2",
-    name: "Sarah Williams",
-    profileImage: "/placeholder.svg?height=100&width=100",
-    activeSince: "Mar 2023",
-    type: "Customer",
-  },
-]
+// const customers: User[] = [
+//   {
+//     id: "1",
+//     name: "Alex Johnson",
+//     profileImage: "/placeholder.svg?height=100&width=100",
+//     activeSince: "Jan 2023",
+//     type: "Customer",
+//   },
+//   {
+//     id: "2",
+//     name: "Sarah Williams",
+//     profileImage: "/placeholder.svg?height=100&width=100",
+//     activeSince: "Mar 2023",
+//     type: "Customer",
+//   },
+// ]
 
-const investors: User[] = [
-  {
-    id: "3",
-    name: "Michael Chen",
-    profileImage: "/placeholder.svg?height=100&width=100",
-    activeSince: "Feb 2022",
-    type: "Investor",
-  },
-  {
-    id: "4",
-    name: "Emma Rodriguez",
-    profileImage: "/placeholder.svg?height=100&width=100",
-    activeSince: "Nov 2022",
-    type: "Investor",
-  },
-]
+// const investors: User[] = [
+//   {
+//     id: "3",
+//     name: "Michael Chen",
+//     profileImage: "/placeholder.svg?height=100&width=100",
+//     activeSince: "Feb 2022",
+//     type: "Investor",
+//   },
+//   {
+//     id: "4",
+//     name: "Emma Rodriguez",
+//     profileImage: "/placeholder.svg?height=100&width=100",
+//     activeSince: "Nov 2022",
+//     type: "Investor",
+//   },
+// ]
 
-const guarantors: User[] = [
-  {
-    id: "5",
-    name: "David Kim",
-    profileImage: "/placeholder.svg?height=100&width=100",
-    activeSince: "Apr 2023",
-    type: "Guarantor",
-  },
-]
+// const guarantors: User[] = [
+//   {
+//     id: "5",
+//     name: "David Kim",
+//     profileImage: "/placeholder.svg?height=100&width=100",
+//     activeSince: "Apr 2023",
+//     type: "Guarantor",
+//   },
+// ]
 
-export function RegistrationForm() {
+export function Users() {
   // Update the state to track image URLs
   const [profilePreview, setProfilePreview] = useState<string | null>(null)
   const [profileUrl, setProfileUrl] = useState<string | null>(null)
@@ -118,8 +121,11 @@ export function RegistrationForm() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [showAddGuarantor, setShowAddGuarantor] = useState(false)
-  const [activeTab, setActiveTab] = useState("customer")
   const [userType, setUserType] = useState("customer")
+  const [activeTab, setActiveTab] =  useState<any>("CUSTOMER")
+  const { data, isLoading, error } = useUsers(activeTab);
+
+console.log("data", data);
 
   // Initialize form with default schema
   const form = useForm<any>({
@@ -238,6 +244,15 @@ export function RegistrationForm() {
       setIsSubmitting(false)
     }
   }
+
+
+  // if (isLoading) {
+  //   return <div className="flex justify-center items-center h-screen">Loading...</div>
+  // }
+  // if (error) {
+  //   return <div className="flex justify-center items-center h-screen">Error: {error.message}</div>
+  // }
+  console.log(activeTab, "activeTab");
   
   
   return (
@@ -309,34 +324,34 @@ export function RegistrationForm() {
             className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700"
           >
             <PlusCircle className="mr-2 h-4 w-4" />
-            Add Guarantor
+            Add {activeTab === "CUSTOMER" ? "Customer" : activeTab === "INVESTOR" ? "Investor" : "Guarantor"}
           </Button>
         </div>
 
         <Tabs defaultValue="customer" value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid grid-cols-3 mb-6 mx-4">
-            <TabsTrigger value="customer">Customers</TabsTrigger>
-            <TabsTrigger value="investor">Investors</TabsTrigger>
-            <TabsTrigger value="guarantor">Guarantors</TabsTrigger>
+            <TabsTrigger value="CUSTOMER">Customers</TabsTrigger>
+            <TabsTrigger value="INVESTOR">Investors</TabsTrigger>
+            <TabsTrigger value="GUARANTOR">Guarantors</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="customer">
-            <UserList users={customers} />
+          <TabsContent value="CUSTOMER">
+            <UserList users={data} />
           </TabsContent>
 
-          <TabsContent value="investor">
-            <UserList users={investors} />
+          <TabsContent value="INVESTOR">
+            <UserList users={data} />
           </TabsContent>
 
-          <TabsContent value="guarantor">
-            <UserList users={guarantors} />
+          <TabsContent value="GUARANTOR">
+            <UserList users={data} />
           </TabsContent>
         </Tabs>
       </div>
 
       {showAddGuarantor && (
         <div className="lg:w-1/3 bg-card rounded-lg border border-border shadow-lg transition-all duration-300 ease-in-out">
-          <AddGuarantorForm onClose={() => setShowAddGuarantor(false)} />
+          <AddGuarantorForm role={activeTab} onClose={() => setShowAddGuarantor(false)} />
         </div>
       )}
     </div>

@@ -88,8 +88,8 @@ export default function InvestmentDashboard() {
   const [selectedItem, setSelectedItem] = useState(null);
   const isMobile = useSelector((state: any) => state.app.isMobile);
   const sidebarOpen = useSelector((state: any) => state.app.sideBarOpen);
-  const dispatch = useDispatch();
   const investorsPerPage = 4;
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   
   // Filter installments based on active tab and search query

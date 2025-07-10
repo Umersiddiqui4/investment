@@ -37,53 +37,56 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useToast } from "@/components/ui/use-toast";
+// import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { setIsAuthenticated } from "@/redux/appSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userData } from "../api/installments";
+import axios from "axios";
+import { useToast } from "../ui/use-toast";
 
 // Sign-in form schema
 const signInFormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" })
-    .max(100, { message: "Password must not be longer than 100 characters" }),
+  .string()
+  .min(8, { message: "Password must be at least 8 characters" })
+  .max(100, { message: "Password must not be longer than 100 characters" }),
+  
 });
 
 // Sign-up form schema
 const signUpFormSchema = z
-  .object({
-    username: z
-      .string()
-      .min(3, { message: "Username must be at least 3 characters" })
-      .max(50, { message: "Username must not be longer than 50 characters" }),
-    email: z.string().email({ message: "Please enter a valid email address" }),
-    contact: z
-      .string()
-      .min(10, { message: "Contact number must be at least 10 digits" })
-      .max(15, { message: "Contact number must not be longer than 15 digits" }),
-    cnicNumber: z
-      .string()
-      .min(13, { message: "CNIC number must be at least 13 digits" })
-      .max(15, { message: "CNIC number must not be longer than 15 digits" }),
-    password: z
-      .string()
+.object({
+  username: z
+  .string()
+  .min(3, { message: "Username must be at least 3 characters" })
+  .max(50, { message: "Username must not be longer than 50 characters" }),
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  contact: z
+  .string()
+  .min(10, { message: "Contact number must be at least 10 digits" })
+  .max(15, { message: "Contact number must not be longer than 15 digits" }),
+  cnicNumber: z
+  .string()
+  .min(13, { message: "CNIC number must be at least 13 digits" })
+  .max(15, { message: "CNIC number must not be longer than 15 digits" }),
+  password: z
+  .string()
       .min(8, { message: "Password must be at least 8 characters" })
       .max(100, { message: "Password must not be longer than 100 characters" }),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords do not match",
     path: ["confirmPassword"],
   });
-
-export function AuthForms() {
-  const [activeTab, setActiveTab] = useState("signin");
-  const { toast } = useToast();
-
+  
+  export function AuthForms() {
+    const [activeTab, setActiveTab] = useState("signin");
+    const { toast } = useToast();
+    
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-900 dark:to-slate-800 p-4">
       <div className="w-full max-w-md">
@@ -122,6 +125,10 @@ function SignInForm({ onSuccess }: { onSuccess: () => void }) {
   const { toast } = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+ // @ts-ignore
+     const apiUrl = import.meta.env.VITE_BE_URL;
+
+
   const form = useForm({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -130,29 +137,54 @@ function SignInForm({ onSuccess }: { onSuccess: () => void }) {
     },
   });
 
-  function onSubmit(data: z.infer<typeof signInFormSchema>) {
+  async function onSubmit(data: z.infer<typeof signInFormSchema>) {
+    console.log(data,"data");
     
+    
+    try {
+      const loginCredentials = {
+        email: data.email,
+        password: data.password,
+        role: "ADMIN"
+      };
+      console.log(loginCredentials,"loginCredentials");
 
-    if (data.email !== userData.email || data.password !== userData.password) {
+      const Response = await axios.post(`${apiUrl}/api/v1/auth/email/login`, loginCredentials);
+  
+      const user = Response.data;
+      const token = Response.data.data.tokens.access.token;
+      console.log( "token------------", token);
+
+
+      const userResponse = await axios.get(`${apiUrl}/api/v1/users`, {
+        // params: { page: 1, take: 10}, // pass role if needed
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+  console.log(userResponse, "userResponse");
+  
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", JSON.stringify(token));
+      dispatch(setIsAuthenticated(true));
+      navigate("/");
+  
       toast({
-        title: "Invalid credentials",
-        description: "Please check your email and password",
+        title: "Sign in successful",
+        description: "You have been signed in successfully.",
+      });
+  
+      onSuccess();
+    } catch (error: any) {
+      console.log(error.response, "error");
+      
+      toast({
+        title: "Login failed",
+        description: error.response?.data?.message || "Invalid credentials",
         variant: "destructive",
       });
-      return;
-      
     }
-    localStorage.setItem("user", JSON.stringify(data));
-    dispatch(setIsAuthenticated(true));
-    navigate("/");
-
-    
-    console.log(data);
-    toast({
-      title: "Sign in successful",
-      description: "You have been signed in successfully.",
-    });
-    onSuccess();
   }
 
   return (

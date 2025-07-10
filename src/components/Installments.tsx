@@ -15,12 +15,14 @@ import Sidebaar from "./Sidebaar";
 import InstallmentCard from "./ui/InstallmentCardInstallment";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setIsAuthenticated,
   setIsMobile,
   setSidebarOpen,
 } from "@/redux/appSlice";
 import { sellItemsData, userData } from "./api/installments";
 import { SellItemDetails } from "./SellDetail";
 import SellItemListView from "./ui/SellItemListView";
+import { useNavigate } from "react-router-dom";
 
 // Sample data - in a real app, this would come from an API
 
@@ -32,6 +34,7 @@ export default function Installments() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedItem, setSelectedItem] = useState(null)
   const [activeTab, setActiveTab] = useState("all");
+  const navigate = useNavigate();
 
   // Check if we're on mobile
   useEffect(() => {
@@ -145,19 +148,24 @@ export default function Installments() {
                 <Bell size={20} />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-cyan-500 rounded-full"></span>
               </Button>
-              <div className="flex items-center gap-2">
-               <Avatar  className="h-8 w-8 border-2 border-cyan-500" >
-                                 <div className="bg-gradient-to-br from-purple-500 to-cyan-500 w-full h-full">
-                                 <img
-                                   src={userData.profile}
-                                   alt="User Avatar"
-                                   className="object-center object-cover"  />
-                                 </div>
-                               </Avatar>
-                <span className="text-sm font-medium hidden md:inline-block">
-                  Admin
-                </span>
-              </div>
+               <div className="flex items-center gap-2">
+                              <Avatar className="h-8 w-8 border-2 border-cyan-500">
+                                <div className="bg-gradient-to-br from-purple-500 to-cyan-500 w-full h-full">
+                                  <img
+                                    src={userData.profile}
+                                    alt="User Avatar"
+                                    className="object-center object-cover"
+                                  />
+                                </div>
+                              </Avatar>
+                              <Button
+                                onClick={() => {
+                                  dispatch(setIsAuthenticated(false)), navigate("/auth");
+                                }}
+                              >
+                                Sign Out
+                              </Button>
+                            </div>
             </div>
           </header>
 

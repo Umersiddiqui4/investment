@@ -22,11 +22,12 @@ import { ThemeToggle } from "./theme/theme-toggle";
 // import { SellItemDetails } from "./sell-item-details"
 import Sidebaar from "./Sidebaar";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsMobile, setIsShowCreateInstallment, setSidebarOpen } from "@/redux/appSlice";
+import { setIsAuthenticated, setIsMobile, setIsShowCreateInstallment, setSidebarOpen } from "@/redux/appSlice";
 import { sellItemsData, userData } from "./api/installments";
 import SellItemListView from "./ui/SellItemListView";
 import { SellItemDetails } from "./SellDetail";
 import { CreateInstallmentForm } from "./createInstallment";
+import { useNavigate } from "react-router-dom";
 
 // My sell items (subset of all items)
 const mySellItemsData = [sellItemsData[0], sellItemsData[2], sellItemsData[4]];
@@ -44,6 +45,7 @@ export default function Sell() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const isShowCreateInstallment = useSelector((state: any) => state.app.IsShowCreateInstallment);
   const [installments, setInstallments] = useState([]);
+  const navigate = useNavigate();
   // Check if we're on mobile
   useEffect(() => {
     const checkIfMobile = () => {
@@ -172,20 +174,24 @@ export default function Sell() {
                 <Bell size={20} />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-cyan-500 rounded-full"></span>
               </Button>
-              <div className="flex items-center gap-2">
-                <Avatar className="h-8 w-8 border-2 border-cyan-500">
-                  <div className="bg-gradient-to-br from-purple-500 to-cyan-500 w-full h-full">
-                    <img
-                      src={userData.profile || "/placeholder.svg"}
-                      alt="User Avatar"
-                      className="object-center object-cover"
-                    />
-                  </div>
-                </Avatar>
-                <span className="text-sm font-medium hidden md:inline-block">
-                  Admin
-                </span>
-              </div>
+               <div className="flex items-center gap-2">
+                              <Avatar className="h-8 w-8 border-2 border-cyan-500">
+                                <div className="bg-gradient-to-br from-purple-500 to-cyan-500 w-full h-full">
+                                  <img
+                                    src={userData.profile}
+                                    alt="User Avatar"
+                                    className="object-center object-cover"
+                                  />
+                                </div>
+                              </Avatar>
+                              <Button
+                                onClick={() => {
+                                  dispatch(setIsAuthenticated(false)), navigate("/auth");
+                                }}
+                              >
+                                Sign Out
+                              </Button>
+                            </div>
             </div>
           </header>
 

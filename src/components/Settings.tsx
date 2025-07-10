@@ -29,7 +29,9 @@ import {
 } from "lucide-react"
 import Sidebaar from "./Sidebaar"
 import { useDispatch, useSelector } from "react-redux"
-import { setIsMobile, setSidebarOpen } from "@/redux/appSlice"
+import { setIsAuthenticated, setIsMobile, setSidebarOpen } from "@/redux/appSlice"
+import { userData } from "./api/installments"
+import { useNavigate } from "react-router-dom"
 
 export default function SettingsComponent() {
   const isMobile = useSelector((state: any) => state.app.isMobile);
@@ -39,6 +41,7 @@ export default function SettingsComponent() {
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
   const { theme, setTheme } = useTheme()
+  const navigate = useNavigate();
 
   // Settings state
   const [settings, setSettings] = useState({
@@ -562,12 +565,24 @@ export default function SettingsComponent() {
                 <Bell size={20} />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-cyan-500 rounded-full"></span>
               </Button>
-              <div className="flex items-center gap-2">
-                <Avatar className="h-8 w-8 border-2 border-cyan-500">
-                  <div className="bg-gradient-to-br from-purple-500 to-cyan-500 w-full h-full"></div>
-                </Avatar>
-                <span className="text-sm font-medium hidden md:inline-block">Admin</span>
-              </div>
+               <div className="flex items-center gap-2">
+                              <Avatar className="h-8 w-8 border-2 border-cyan-500">
+                                <div className="bg-gradient-to-br from-purple-500 to-cyan-500 w-full h-full">
+                                  <img
+                                    src={userData.profile}
+                                    alt="User Avatar"
+                                    className="object-center object-cover"
+                                  />
+                                </div>
+                              </Avatar>
+                              <Button
+                                onClick={() => {
+                                  dispatch(setIsAuthenticated(false)), navigate("/auth");
+                                }}
+                              >
+                                Sign Out
+                              </Button>
+                            </div>
             </div>
           </header>
 
