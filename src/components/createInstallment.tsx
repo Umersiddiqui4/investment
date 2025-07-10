@@ -45,6 +45,9 @@ import { supabase } from "@/lib/supabaseClient"
 import { sellItemsData } from "./api/installments"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Alert, AlertDescription } from "./ui/alert"
+import AddGuarantorForm from "./ui/add-guarantor-form"
+import useUsers from "@/hooks/getApi"
+import { log } from "console"
 
 // Sample data for investors and customers
 const investor = [
@@ -201,6 +204,10 @@ export function CreateInstallmentForm() {
   const [investors, setInvestors] = useState<any[]>(() => [])
   const [contributionError, setContributionError] = useState<string | null>(null)
   const [isRateManual, setIsRateManual] = useState(false)
+  const [showAddGuarantor, setShowAddGuarantor] = useState(false)
+  const [activeTab, setActiveTab] = useState<"CUSTOMER" | "INVESTOR">("CUSTOMER")
+   const { data: customerData, isLoading: isCustomerLoading, error: customerError } = useUsers("CUSTOMER");
+   const { data: investorData, isLoading: isInvestorLoading, error: investorError } = useUsers("INVESTOR");
 
   const [localCustomers, setLocalCustomers] = useState<any>(customers)
   const dispatch = useDispatch()
@@ -380,18 +387,19 @@ export function CreateInstallmentForm() {
       })),
     )
   }
+ 
 
   useEffect(() => {
-    const userData = localStorage.getItem("userData")
-    if (userData) {
-      const parsedData = JSON.parse(userData)
-      const onlyInvestors = parsedData.filter((user: any) => user.userType === "investor")
-      const onlyCustomers = parsedData.filter((user: any) => user.userType === "customer")
-
-      setLocalInvestors(onlyInvestors)
-      setLocalCustomers(onlyCustomers)
+    if (investorData) {
+      setLocalInvestors(investorData)
     }
-  }, [])
+    if (customerData) {
+      setLocalCustomers(customerData)
+    }
+  }, [customerData, investorData])
+console.log("localCustomers", localCustomers);
+console.log("localInvestors", localInvestors);
+
 
   // Initialize investor form
   const investorForm = useForm<InvestorFormValues>({
@@ -433,18 +441,8 @@ export function CreateInstallmentForm() {
 
   console.log(localInvestors, "localInvestors")
 
-  useEffect(() => {
-    const updatedInvestors: any[] = []
 
-    investorIds.forEach((id: string) => {
-      const investor = localInvestors.find((inv: any) => inv.id === id)
-      if (investor) updatedInvestors.push(investor)
-    })
-
-    setInvestors(updatedInvestors)
-  }, [investorIds, localInvestors])
-
-  console.log(investors, "investors")
+ 
 
   // Add guarantor
   const addGuarantor = () => {
@@ -825,7 +823,8 @@ export function CreateInstallmentForm() {
                                 type="button"
                                 variant="outline"
                                 size="sm"
-                                onClick={() => setShowAddInvestor(true)}
+                                // onClick={() => setShowAddInvestor(true)}
+                                onClick={() => {setShowAddGuarantor(true); setActiveTab("INVESTOR");}}
                                 className="text-violet-600 dark:text-violet-400 border-violet-300 dark:border-violet-700 hover:bg-violet-50 dark:hover:bg-violet-900/30"
                               >
                                 <Plus className="mr-1 h-3 w-3" />
@@ -878,10 +877,10 @@ export function CreateInstallmentForm() {
                                     </CommandEmpty>
                                     <CommandGroup>
                                       <CommandList className="max-h-[350px] overflow-y-auto py-2 overscroll-contain">
-                                        {localInvestors.map((investor: any) => (
+                                        {localInvestors && localInvestors.map((investor: any) => (
                                           <CommandItem
                                             key={investor.id}
-                                            value={investor.name}
+                                            value={investor.firstName + " " + investor.lastName}
                                             onSelect={() => {
                                               const currentIds = [...field.value]
                                               const investorId = investor.id
@@ -899,11 +898,11 @@ export function CreateInstallmentForm() {
                                             <div className="flex items-center gap-2">
                                               <Avatar className="h-8 w-8">
                                                 <img
-                                                  src={investor.image || "/placeholder.svg" || "/placeholder.svg"}
-                                                  alt={investor.name}
+                                                  src={investor?.image || "/placeholder.svg" || "/placeholder.svg"}
+                                                  alt={investor.firstName}
                                                 />
                                               </Avatar>
-                                              <span>{investor.name}</span>
+                                              <span>{investor.firstName +  " " + investor.lastName}</span>
                                             </div>
                                             <CheckCircle2
                                               className={cn(
@@ -932,7 +931,7 @@ export function CreateInstallmentForm() {
                                       const investor = localInvestors.find((inv: any) => inv.id === investorId)
                                       // const investor = investors[investorId];
                                       console.log(investorId, " investor")
-
+                                       console.log(investor, " investor")
                                       if (!investor) return null
 
                                       return (
@@ -943,10 +942,10 @@ export function CreateInstallmentForm() {
                                           <Avatar className="h-6 w-6">
                                             <img
                                               src={investor.image || "/placeholder.svg" || "/placeholder.svg"}
-                                              alt={investor.name}
+                                              alt={investor.firstName}
                                             />
                                           </Avatar>
-                                          <span className="text-sm">{investor.name}</span>
+                                          <span className="text-sm">{investor.firstName + " " + investor.lastName}</span>
                                           <Button
                                             type="button"
                                             variant="ghost"
@@ -992,7 +991,7 @@ export function CreateInstallmentForm() {
                                 type="button"
                                 variant="outline"
                                 size="sm"
-                                onClick={() => setShowAddCustomer(true)}
+                                onClick={() => {setShowAddGuarantor(true); setActiveTab("CUSTOMER");}}
                                 className="text-cyan-600 dark:text-cyan-400 border-cyan-300 dark:border-cyan-700 hover:bg-cyan-50 dark:hover:bg-cyan-900/30"
                               >
                                 <Plus className="mr-1 h-3 w-3" />
@@ -1013,7 +1012,7 @@ export function CreateInstallmentForm() {
                                     )}
                                   >
                                     {field.value
-                                      ? localCustomers.find((customer: any) => customer.id === field.value)?.name
+                                      ? localCustomers.find((customer: any) => customer.id === field.value)?.firstName + " " + localCustomers.find((customer: any) => customer.id === field.value)?.lastName
                                       : "Select customer"}
                                     <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                   </Button>
@@ -1047,7 +1046,7 @@ export function CreateInstallmentForm() {
                                       {localCustomers.map((customer: any) => (
                                         <CommandItem
                                           key={customer.id}
-                                          value={customer.name}
+                                          value={customer.firstName}
                                           onSelect={() => {
                                             form.setValue("customerId", customer.id)
                                           }}
@@ -1057,11 +1056,11 @@ export function CreateInstallmentForm() {
                                             <Avatar className="h-8 w-8">
                                               <img
                                                 src={customer.image || "/placeholder.svg" || "/placeholder.svg"}
-                                                alt={customer.name}
+                                                alt={customer.firstName}
                                               />
                                             </Avatar>
                                             <div className="flex flex-col">
-                                              <span>{customer.name}</span>
+                                              <span>{customer.firstName + " " + customer.lastName}</span>
                                               <span className="text-xs text-slate-500 dark:text-slate-400">
                                                 {customer.email}
                                               </span>
@@ -2209,6 +2208,11 @@ export function CreateInstallmentForm() {
             </motion.div>
           </div>
         )}
+         {showAddGuarantor && (
+                <div className="lg:w-1/3 bg-card rounded-lg border border-border shadow-lg transition-all duration-300 ease-in-out">
+                  <AddGuarantorForm role={activeTab} onClose={() => setShowAddGuarantor(false)} />
+                </div>
+              )}
       </AnimatePresence>
     </div>
   )
