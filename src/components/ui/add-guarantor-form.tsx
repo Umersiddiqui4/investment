@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { X, Upload, Phone } from "lucide-react"
 import { useCreateUser } from "@/hooks/postApi"
 import { PhoneInput } from "./phone-input"
+import useUsers from "@/hooks/getApi"
 
 interface AddGuarantorFormProps {
   onClose: () => void
@@ -37,6 +38,21 @@ export default function AddGuarantorForm({ onClose, role }: AddGuarantorFormProp
   }
 
   const { createUser, loading, error, success } = useCreateUser();
+  
+  const {
+  data: customerData,
+  isLoading: isCustomerLoading,
+  error: customerError,
+  refetch: refetchCustomers
+} = useUsers("CUSTOMER");
+
+const {
+  data: investorData,
+  isLoading: isInvestorLoading,
+  error: investorError,
+  refetch: refetchInvestors
+} = useUsers("INVESTOR");
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +68,10 @@ export default function AddGuarantorForm({ onClose, role }: AddGuarantorFormProp
   const cnicFrontFileName = cnicFrontFile ? cnicFrontFile.name : null;
   const cnicBackFileName = cnicBackFile ? cnicBackFile.name : null;
   const profilePicFileName = profilePicFile ? profilePicFile.name : null;
+
+
+  
+
   
   
     try {
@@ -68,6 +88,11 @@ export default function AddGuarantorForm({ onClose, role }: AddGuarantorFormProp
         cnicNumber: cnicNumber, 
 
       });
+ if (role === "INVESTOR") {
+    await refetchInvestors();
+  } else if (role === "CUSTOMER") {
+    await refetchCustomers();
+  }
   
       onClose(); 
     } catch (err) {

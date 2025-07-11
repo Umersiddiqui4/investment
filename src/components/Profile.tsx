@@ -33,14 +33,17 @@ import {
 import Sidebaar from "./Sidebaar";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAuthenticated, setSidebarOpen } from "@/redux/appSlice";
-import { userData } from "./api/installments";
+// import { userData } from "./api/installments";
 import { useNavigate } from "react-router-dom";
+import useUsers from "@/hooks/getApi";
 
 // Sample user data - in a real app, this would come from an API or database
 
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
+  const { data:userData, isLoading, error } = useUsers("ADMIN");
+
   const [tempUserData, setTempUserData] = useState(userData);
   const isMobile = useSelector((state: any) => state.app.isMobile);
   const sidebarCollapsed = useSelector((state: any) => state.app.sideBarCollapsed);
@@ -76,7 +79,7 @@ export default function Profile() {
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
-    setTempUserData((prev) => ({
+    setTempUserData((prev:any) => ({
       ...prev,
       [name]: value,
     }));
@@ -88,7 +91,7 @@ export default function Profile() {
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target?.result) {
-          setTempUserData((prev) => ({
+          setTempUserData((prev:any) => ({
             ...prev,
             [imageType]: event.target?.result,
           }));
@@ -101,6 +104,11 @@ export default function Profile() {
   const triggerFileInput = (ref: any) => {
     ref.current?.click();
   };
+  console.log("userData", userData);
+  
+    if(!userData){
+    return <div>loading</div>
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 text-slate-900 dark:text-slate-100 transition-colors duration-300">
@@ -205,16 +213,18 @@ export default function Profile() {
                   <br></br>
                   <div className="flex flex-col items-center">
                     <div className="relative group">
-                      <Avatar className="h-32 w-32 border-4 border-white dark:border-slate-700 shadow-lg mb-4 overflow-hidden">
-                        <img
-                          src={
-                            isEditing
-                              ? tempUserData.profile
-                              : userData.profile
-                          }
-                          alt="Profile"
-                          className="object-cover w-full h-full"
-                        />
+                      <Avatar className="h-32 w-32 border-4 border-white dark:border-slate-700 shadow-lg mb-4 overflow-hidden flex items-center justify-center bg-gradient-to-br from-cyan-500 to-purple-500">
+                        {((isEditing ? tempUserData.profile : userData.profile)) ? (
+                          <img
+                            src={isEditing ? tempUserData.profile : userData.profile}
+                            alt="Profile"
+                            className="object-cover w-full h-full"
+                          />
+                        ) : (
+                          <span className="text-3xl font-bold text-white">
+                            {`${userData[0]?.firstName?.[0] ?? ""}${userData[0]?.lastName?.[0] ?? ""}`}
+                          </span>
+                        )}
                       </Avatar>
                       {isEditing && (
                         <div
@@ -243,7 +253,7 @@ export default function Profile() {
                       />
                     ) : (
                       <h2 className="text-2xl font-bold text-center bg-gradient-to-r from-cyan-600 to-purple-600 dark:from-cyan-400 dark:to-purple-500 bg-clip-text text-transparent">
-                        {userData.username}
+                        {userData[0].firstName} {userData[0].lastName}
                       </h2>
                     )}
                   </div>
@@ -272,7 +282,7 @@ export default function Profile() {
                             />
                           ) : (
                             <p className="text-slate-900 dark:text-white pl-6">
-                              {userData.email}
+                              {userData[0].email}
                             </p>
                           )}
                         </div>
@@ -291,7 +301,7 @@ export default function Profile() {
                             />
                           ) : (
                             <p className="text-slate-900 dark:text-white pl-6">
-                              {userData.contact}
+                              {userData[0].phone}
                             </p>
                           )}
                         </div>
@@ -301,7 +311,7 @@ export default function Profile() {
                             CNIC Number
                           </Label>
                             <p className="text-slate-900 dark:text-white pl-6">
-                              {userData.cnicNumber}
+                              {userData[0].cnicNumber}
                             </p>
                         </div>
 
@@ -310,7 +320,7 @@ export default function Profile() {
                             <MapPin className="h-4 w-4 mr-2" />
                             Address
                           </Label>
-                          {isEditing ? (
+                          {/* {isEditing ? (
                             <Textarea
                               name="address"
                               value={tempUserData.address}
@@ -319,9 +329,9 @@ export default function Profile() {
                             />
                           ) : (
                             <p className="text-slate-900 dark:text-white pl-6">
-                              {userData.address}
+                              {userData[0].address}
                             </p>
-                          )}
+                          )} */}
                         </div>
                       </div>
                     </div>
@@ -343,7 +353,7 @@ export default function Profile() {
                               src={
                                 isEditing
                                   ? tempUserData.cnicFront
-                                  : userData.cnicFront
+                                  : userData[0].cnicFront
                               }
                               alt="CNIC Front"
                               className="w-full h-auto object-cover"
@@ -377,7 +387,7 @@ export default function Profile() {
                               src={
                                 isEditing
                                   ? tempUserData.cnicBack
-                                  : userData.cnicBack
+                                  : userData[0].cnicBack
                               }
                               alt="CNIC Back"
                               className="w-full h-auto object-cover"
@@ -442,7 +452,7 @@ export default function Profile() {
                         Member Since
                       </div>
                       <div className="text-lg font-medium text-purple-600 dark:text-purple-400">
-                        {userData && userData.activeSince}
+                        {userData && userData[0].createdAt}
                       </div>
                     </div>
                     
@@ -451,7 +461,7 @@ export default function Profile() {
                         Account Type
                       </div>
                       <div className="text-lg font-medium text-amber-600 dark:text-amber-400">
-                        Investor
+                          {userData && userData[0].roles}
                       </div>
                     </div>
                   </div>

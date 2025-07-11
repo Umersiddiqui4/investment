@@ -208,6 +208,7 @@ export function CreateInstallmentForm() {
   const [activeTab, setActiveTab] = useState<"CUSTOMER" | "INVESTOR">("CUSTOMER")
    const { data: customerData, isLoading: isCustomerLoading, error: customerError } = useUsers("CUSTOMER");
    const { data: investorData, isLoading: isInvestorLoading, error: investorError } = useUsers("INVESTOR");
+console.log(showAddGuarantor, "showAddGuarantor");
 
   const [localCustomers, setLocalCustomers] = useState<any>(customers)
   const dispatch = useDispatch()
@@ -388,6 +389,7 @@ export function CreateInstallmentForm() {
     )
   }
  
+
 
   useEffect(() => {
     if (investorData) {
