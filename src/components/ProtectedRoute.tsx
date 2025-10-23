@@ -1,11 +1,17 @@
 // src/components/ProtectedRoute.tsx
 import { Navigate } from "react-router-dom";
+import { ReactElement } from "react";
 
-const ProtectedRoute = ({ isAuthenticated, children }: { isAuthenticated: boolean; children: JSX.Element }) => {
+interface ProtectedRouteProps {
+  isAuthenticated: boolean;
+  children: ReactElement;
+}
+
+const ProtectedRoute = ({ isAuthenticated, children }: ProtectedRouteProps) => {
   if (!isAuthenticated) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/login" replace />;
   }
   return children;
-};
+}
 
 export default ProtectedRoute;

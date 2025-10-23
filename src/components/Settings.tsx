@@ -577,7 +577,7 @@ export default function SettingsComponent() {
                               </Avatar>
                               <Button
                                 onClick={() => {
-                                  dispatch(setIsAuthenticated(false)), navigate("/auth");
+                                  dispatch(setIsAuthenticated(false)), navigate("/login");
                                 }}
                               >
                                 Sign Out

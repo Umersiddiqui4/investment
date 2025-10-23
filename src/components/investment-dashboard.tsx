@@ -201,7 +201,7 @@ export default function InvestmentDashboard() {
                 </Avatar>
                 <Button
                   onClick={() => {
-                    dispatch(setIsAuthenticated(false)), navigate("/auth");
+                    dispatch(setIsAuthenticated(false)), navigate("/login");
                   }}
                 >
                   Sign Out

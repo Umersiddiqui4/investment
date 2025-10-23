@@ -304,7 +304,7 @@ console.log("data", data);
                 </Avatar>
                 <Button
                   onClick={() => {
-                    dispatch(setIsAuthenticated(false)), navigate("/auth")
+                      dispatch(setIsAuthenticated(false)), navigate("/login")
                   }}
                 >
                   Sign Out

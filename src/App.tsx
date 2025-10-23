@@ -12,6 +12,7 @@ import { AuthForms } from "./components/auth/auth-forms";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useSelector } from "react-redux";
 import {Users} from "./components/users";
+import { CustomerRequest } from "./components/CustomerRequest/customer-request";
 
 // Mock auth logic for now
 
@@ -26,7 +27,7 @@ export default function App() {
     >
       <Router>
         <Routes>
-          <Route path="/auth" element={<AuthForms />} />
+          <Route path="/login" element={<AuthForms />} />
           
           <Route
             path="/"
@@ -81,6 +82,14 @@ export default function App() {
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <Sell />
+              </ProtectedRoute>
+            }
+          />
+        <Route
+            path="/customer-request"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <CustomerRequest />
               </ProtectedRoute>
             }
           />

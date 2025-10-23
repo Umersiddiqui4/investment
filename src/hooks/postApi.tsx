@@ -6,7 +6,7 @@ type CreateUserPayload = {
   lastName: string;
   email: string;
   phone: string;
-  role:  'GUARANTOR' | 'ADMIN' | 'INVESTOR' | 'CUSTOMER'; // extend if needed
+  role: 'GUARANTOR' | 'ADMIN' | 'INVESTOR' | 'CUSTOMER'; // extend if needed
   companyId?: string;
   cnicFrontUrl?: string; // URL of the CNIC front image
   cnicBackUrl?: string; // URL of the CNIC back image
@@ -20,13 +20,13 @@ export function useCreateUser() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   // @ts-ignore
-     const apiUrl = import.meta.env.VITE_BE_URL;
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const createUser = async (userData: CreateUserPayload) => {
-      const token = localStorage.getItem("token")?.replace(/"/g, "");
+    const token = localStorage.getItem("token")?.replace(/"/g, "");
     setLoading(true);
     setError(null);
     setSuccess(false);
-console.log("userData", userData);
+    console.log("userData", userData);
 
     try {
 

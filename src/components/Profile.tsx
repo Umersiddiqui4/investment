@@ -164,7 +164,7 @@ export default function Profile() {
                              </Avatar>
                              <Button
                                onClick={() => {
-                                 dispatch(setIsAuthenticated(false)), navigate("/auth");
+                                 dispatch(setIsAuthenticated(false)), navigate("/login");
                                }}
                              >
                                Sign Out
