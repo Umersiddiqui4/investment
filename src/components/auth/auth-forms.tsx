@@ -145,7 +145,8 @@ function SignInForm({ onSuccess }: { onSuccess: () => void }) {
       const loginCredentials = {
         email: data.email,
         password: data.password,
-        role: "ADMIN"
+        companyId: "d2668201-b347-45d0-9db0-d9a7171dedac",
+        // role: "ADMIN"
       };
       console.log(loginCredentials,"loginCredentials");
 
