@@ -177,4 +177,31 @@ export function redirectToLoginIfUnauthenticated() {
 	}
 }
 
+export async function updateRequest<T>(requestId: string, data: unknown, opts?: ApiClientOptions): Promise<T> {
+  return apiRequest<T>(`/api/v1/requests/${requestId}`, "PATCH", data, opts)
+}
 
+export async function changeRequestStatus<T>(
+  requestId: string,
+  status: string,
+  rejectionReason?: string,
+  opts?: ApiClientOptions,
+): Promise<T> {
+  const body = rejectionReason ? { status, rejectionReason } : { status }
+  return apiRequest<T>(`/api/v1/requests/${requestId}/status`, "PATCH", body, opts)
+}
+export async function fetchRequestsWithPagination<T>(
+  page = 1,
+  limit = 10,
+  search?: string,
+  status?: string,
+  opts?: ApiClientOptions,
+): Promise<T> {
+  const params = new URLSearchParams()
+  params.append("page", page.toString())
+  params.append("limit", limit.toString())
+  if (search) params.append("search", search)
+  if (status && status !== "ALL") params.append("status", status)
+
+  return apiRequest<T>(`/api/v1/requests?${params.toString()}`, "GET", undefined, opts)
+}
